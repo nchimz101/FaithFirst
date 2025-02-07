@@ -21,12 +21,18 @@
   <link rel="preload" href="app.js" as="script">
   <link rel="preload" href="assets/images/hero-bg.jpg" as="image">
   <link rel="preload" href="assets/fonts/custom-font.woff2" as="font" crossorigin>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a365d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Faith First">
+  <link rel="apple-touch-icon" href="assets/icons/icon-152x152.png">
   <script>
     // Initialize GSAP
     gsap.registerPlugin(ScrollTrigger);
     document.documentElement.classList.add('dark');
   </script>
-  <script src="js/bible-controller.js"></script>
+<link rel="manifest" href="/manifest.json" />  <script src="js/bible-controller.js"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white transition-colors duration-200 pt-16"
       x-data="{ 
@@ -233,17 +239,18 @@
     </div>
 </section>
 
-<!-- Add App Download Button -->
-<div class="fixed left-4 bottom-4 z-40 group"
+<!-- Replace the App Download Button -->
+<div class="fixed left-4 bottom-4 z-40"
      x-data="{ showTooltip: false }">
-    <button class="bg-yellow-400 text-gray-900 p-4 rounded-full shadow-lg hover:bg-yellow-300 transition-all duration-300 group-hover:scale-105"
-            @mouseenter="showTooltip = true"
-            @mouseleave="showTooltip = false">
+    <button class="bg-yellow-400 text-gray-900 p-4 rounded-full shadow-lg hover:bg-yellow-300 transition-all duration-300"
+            @click="showTooltip = !showTooltip"
+            aria-label="Download app">
         <i class="fas fa-mobile-alt text-xl"></i>
     </button>
     
     <!-- Download Popup -->
     <div x-show="showTooltip"
+         @click.away="showTooltip = false"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0 transform translate-y-2"
          x-transition:enter-end="opacity-100 transform translate-y-0"
@@ -251,7 +258,12 @@
          x-transition:leave-start="opacity-100 transform translate-y-0"
          x-transition:leave-end="opacity-0 transform translate-y-2"
          class="absolute bottom-full left-0 mb-2 w-64 bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20">
-        <h4 class="text-yellow-400 font-bold mb-2">Faith First Mobile App</h4>
+        <div class="flex justify-between items-start mb-3">
+            <h4 class="text-yellow-400 font-bold">Faith First Mobile App</h4>
+            <button @click="showTooltip = false" class="text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
         <p class="text-sm text-gray-300 mb-3">Get access to all features offline and receive daily notifications.</p>
         <a href="faith-first.apk" 
            download
@@ -267,5 +279,19 @@
 <script src="js/hymnal-api.js"></script>
 <script src="js/audio-player.js"></script>
 <script src="js/quiz-controller.js"></script>
+<script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful');
+          })
+          .catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
