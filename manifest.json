@@ -1,0 +1,82 @@
+{
+  "name": "Faith First Ministries",
+  "short_name": "Faith First",
+  "description": "Nurturing faith through scripture, song, and service",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a365d",
+  "theme_color": "#1a365d",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/pwa.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Bible Study",
+      "url": "/bible-study.html",
+      "description": "Start your Bible study session"
+    },
+    {
+      "name": "Prayer Journal",
+      "url": "/prayer-journal.html",
+      "description": "Open your prayer journal"
+    },
+    {
+      "name": "Sacred Hymns",
+      "url": "/hymns.html",
+      "description": "Browse and listen to hymns"
+    }
+  ],
+  "categories": ["education", "lifestyle", "religious"],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/home.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "description": "Home page of Faith First Ministries"
+    }
+  ],
+  "prefer_related_applications": false
+}
