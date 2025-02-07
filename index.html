@@ -239,41 +239,6 @@
     </div>
 </section>
 
-<!-- Replace the App Download Button -->
-<div class="fixed left-4 bottom-4 z-40"
-     x-data="{ showTooltip: false }">
-    <button class="bg-yellow-400 text-gray-900 p-4 rounded-full shadow-lg hover:bg-yellow-300 transition-all duration-300"
-            @click="showTooltip = !showTooltip"
-            aria-label="Download app">
-        <i class="fas fa-mobile-alt text-xl"></i>
-    </button>
-    
-    <!-- Download Popup -->
-    <div x-show="showTooltip"
-         @click.away="showTooltip = false"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 transform translate-y-2"
-         x-transition:enter-end="opacity-100 transform translate-y-0"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 transform translate-y-0"
-         x-transition:leave-end="opacity-0 transform translate-y-2"
-         class="absolute bottom-full left-0 mb-2 w-64 bg-white/10 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20">
-        <div class="flex justify-between items-start mb-3">
-            <h4 class="text-yellow-400 font-bold">Faith First Mobile App</h4>
-            <button @click="showTooltip = false" class="text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <p class="text-sm text-gray-300 mb-3">Get access to all features offline and receive daily notifications.</p>
-        <a href="faith-first.apk" 
-           download
-           class="flex items-center justify-center gap-2 bg-yellow-400 text-gray-900 py-2 px-4 rounded-lg hover:bg-yellow-300 transition-colors font-semibold">
-            <i class="fas fa-download"></i>
-            Download APK
-        </a>
-    </div>
-</div>
-
 <script src="app.js"></script>
 <script src="js/bible-controller.js"></script>
 <script src="js/hymnal-api.js"></script>
