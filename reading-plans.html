@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bible Reading Plans - Faith First Ministries">
+    <meta name="keywords" content="church, ministry, faith, bible study, worship, prayer">
+    <meta property="og:title" content="Reading Plans - Faith First Ministries">
+    <meta property="og:description" content="Join our structured Bible reading plans">
+    <meta property="og:type" content="website">
+    <title>Reading Plans - Faith First Ministries</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    <link rel="preload" href="assets/images/hero-bg.jpg" as="image">
+    <link rel="preload" href="assets/fonts/custom-font.woff2" as="font" crossorigin>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        document.documentElement.classList.add('dark');
+    </script>
+    <script src="js/reading-plans.js"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white transition-colors duration-200 pt-16"
+      x-data="{ 
+          readingPlanController: new ReadingPlanController(),
+          activePlan: null,
+          showPlanDetails: false,
+          selectedFilter: 'all',
+          loading: false,
+          error: null,
+          hasActivePlans: false,
+          activePlans: []
+      }"
+      x-init="
+          activePlans = Object.values(readingPlanController.plans)
+              .filter(plan => readingPlanController.getProgress(plan.id));
+          hasActivePlans = activePlans.length > 0;
+      ">
+
+    <!-- Standard Navigation -->
+    <nav class="navbar-glass p-4 fixed w-full top-0 z-50" x-data="{ open: false }">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold flex items-center space-x-2">
+                <i class="fas fa-dove text-yellow-400"></i>
+                <span>Faith First</span>
+            </a>
+            <button class="lg:hidden" @click="open = !open" 
+                    aria-label="Toggle navigation menu" 
+                    role="button" 
+                    tabindex="0">
+                <i class="fas" :class="open ? 'fa-times' : 'fa-bars'"></i>
+            </button>
+            <div class="hidden lg:flex space-x-8">
+                <a href="index.html" class="hover:text-yellow-400 transition-colors duration-200">Home</a>
+                <a href="bible-study.html" class="hover:text-yellow-400 transition-colors duration-200">Bible Study</a>
+                <a href="hymns.html" class="hover:text-yellow-400 transition-colors duration-200">Hymns</a>
+                <a href="prayer-journal.html" class="hover:text-yellow-400 transition-colors duration-200">Prayer Journal</a>
+                <a href="community.html" class="hover:text-yellow-400 transition-colors duration-200">Community</a>
+                <a href="reading-plans.html" class="hover:text-yellow-400 transition-colors duration-200">Reading Plans</a>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="lg:hidden" x-show="open" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-4"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-4">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block py-2 px-4 text-white hover:bg-blue-700 rounded-md transition-colors">Home</a>
+                <a href="bible-study.html" class="block py-2 px-4 text-white hover:bg-blue-700 rounded-md transition-colors">Bible Study</a>
+                <a href="hymns.html" class="block py-2 px-4 text-white hover:bg-blue-700 rounded-md transition-colors">Hymns</a>
+                <a href="prayer-journal.html" class="block py-2 px-4 text-white hover:bg-blue-700 rounded-md transition-colors">Prayer Journal</a>
+                <a href="community.html" class="block py-2 px-4 text-white hover:bg-blue-700 rounded-md transition-colors">Community</a>
+                <a href="reading-plans.html" class="block py-2 px-4 text-white hover:bg-blue-700 rounded-md transition-colors">Reading Plans</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Enhanced Header Section -->
+        <section class="relative py-32 mb-20 bg-gradient-to-r from-blue-800 to-purple-900 rounded-3xl overflow-hidden">
+            <div class="absolute inset-0 bg-pattern opacity-10"></div>
+            <div class="absolute inset-0 bg-black/20"></div>
+            <div class="relative z-10 text-center">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200">
+                    Bible Reading Plans
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-8 leading-relaxed">
+                    Transform your spiritual journey with structured daily readings designed to help you explore and understand God's Word.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="flex items-center space-x-2 bg-white/10 rounded-full px-6 py-3">
+                        <i class="fas fa-book-reader text-yellow-400"></i>
+                        <span class="text-blue-100">Multiple Plans</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-white/10 rounded-full px-6 py-3">
+                        <i class="fas fa-calendar-check text-yellow-400"></i>
+                        <span class="text-blue-100">Progress Tracking</span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-white/10 rounded-full px-6 py-3">
+                        <i class="fas fa-clock text-yellow-400"></i>
+                        <span class="text-blue-100">Time Estimates</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plan Selection and Progress -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Sidebar with Plans -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Your Active Plans -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Your Active Plans</h3>
+                    <div class="space-y-4" x-data="{ activePlans: readingPlanController.getActivePlans() }">
+                        <template x-if="!activePlans.length">
+                            <p class="text-blue-100 text-center py-4">No active reading plans yet. Start one below!</p>
+                        </template>
+                        <template x-for="plan in activePlans" :key="plan.id">
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <h4 class="font-semibold text-yellow-400 mb-2" x-text="plan.title"></h4>
+                                <div class="space-y-2">
+                                    <div class="w-full bg-gray-700/50 rounded-full h-2">
+                                        <div class="bg-yellow-400 h-2 rounded-full transition-all duration-500"
+                                             :style="`width: ${readingPlanController.getProgress(plan.id).percentComplete}%`">
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between text-sm text-gray-400">
+                                        <span x-text="`${readingPlanController.getProgress(plan.id).percentComplete}% Complete`"></span>
+                                        <span x-text="`${readingPlanController.getProgress(plan.id).daysRemaining} days left`"></span>
+                                    </div>
+                                    <button @click="
+                                        activePlan = plan;
+                                        showPlanDetails = true;
+                                        $nextTick(() => $refs.planDetails?.scrollIntoView({ behavior: 'smooth' }));"
+                                        class="w-full mt-2 px-4 py-2 text-sm border border-yellow-400/20 text-yellow-400 rounded-lg hover:bg-yellow-400/10 transition-colors">
+                                        Continue Reading
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Available Plans -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Available Plans</h3>
+                    <div class="space-y-4">
+                        <template x-for="plan in readingPlanController.getPlanList()" :key="plan.id">
+                            <div class="bg-white/5 rounded-xl p-4">
+                                <h4 class="font-semibold text-yellow-400 mb-2" x-text="plan.title"></h4>
+                                <p class="text-sm text-blue-100 mb-3" x-text="plan.description"></p>
+                                <div class="flex items-center justify-between text-sm text-gray-400 mb-3">
+                                    <span x-text="`${plan.duration} days`"></span>
+                                    <span x-text="plan.type === 'overview' ? 'Overview' : 'Complete Reading'"></span>
+                                </div>
+                                <button @click="
+                                    activePlan = plan;
+                                    showPlanDetails = true;
+                                    $nextTick(() => $refs.planDetails?.scrollIntoView({ behavior: 'smooth' }));"
+                                    class="w-full px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-colors">
+                                    View Plan
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plan Details -->
+            <div class="lg:col-span-2">
+                <div x-show="showPlanDetails && activePlan" 
+                     x-ref="planDetails"
+                     class="bg-white/10 backdrop-blur-md rounded-2xl p-6">
+                    <!-- Plan Header -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="text-2xl font-bold text-yellow-400" x-text="activePlan?.title"></h2>
+                                <p class="text-blue-100 mt-2" x-text="activePlan?.description"></p>
+                            </div>
+                            <button @click="showPlanDetails = false" class="text-gray-400 hover:text-white">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-4 mt-4 text-sm text-gray-400">
+                            <span><i class="fas fa-calendar-alt mr-2"></i><span x-text="`${activePlan?.duration} days`"></span></span>
+                            <span><i class="fas fa-clock mr-2"></i><span>~30 min/day</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Section -->
+                    <template x-if="readingPlanController.getProgress(activePlan?.id)">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-yellow-400 mb-4">Your Progress</h3>
+                            <div class="bg-gray-700 rounded-full h-3 mb-4">
+                                <div class="bg-yellow-400 h-3 rounded-full transition-all duration-500"
+                                     :style="`width: ${readingPlanController.getProgress(activePlan.id).percentComplete}%`">
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm text-gray-400">
+                                <span x-text="`${readingPlanController.getProgress(activePlan.id).percentComplete}% Complete`"></span>
+                                <span x-text="`${readingPlanController.getProgress(activePlan.id).daysRemaining} days remaining`"></span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Today's Reading -->
+                    <template x-if="readingPlanController.getProgress(activePlan?.id)">
+                        <div class="bg-black/20 rounded-xl p-6 mb-6">
+                            <h3 class="text-lg font-semibold text-yellow-400 mb-4">Today's Reading</h3>
+                            <template x-if="readingPlanController.getNextReading(activePlan?.id)">
+                                <div>
+                                    <div class="flex justify-between items-center mb-4">
+                                        <span class="text-blue-100" x-text="`Day ${readingPlanController.getNextReading(activePlan.id).day}`"></span>
+                                        <span class="text-gray-400" x-text="`~${readingPlanController.getNextReading(activePlan.id).estimated_duration} min`"></span>
+                                    </div>
+                                    <p class="text-white mb-4" x-text="readingPlanController.getNextReading(activePlan.id).description"></p>
+                                    <div class="space-y-3">
+                                        <template x-for="passage in readingPlanController.getNextReading(activePlan.id).passages" :key="passage">
+                                            <div class="flex items-center justify-between bg-white/5 rounded-lg p-3">
+                                                <span class="text-blue-100" x-text="passage"></span>
+                                                <button class="text-yellow-400 hover:text-yellow-300">
+                                                    <i class="fas fa-book-open"></i>
+                                                </button>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <button @click="
+                                        readingPlanController.markDayComplete(activePlan.id, readingPlanController.getNextReading(activePlan.id).day);
+                                        activePlans = readingPlanController.getActivePlans();
+                                        hasActivePlans = activePlans.length > 0;
+                                        $nextTick(() => {
+                                            // Force Alpine to re-evaluate the progress
+                                            activePlan = {...activePlan};
+                                        });"
+                                        class="w-full mt-6 px-6 py-3 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-colors font-semibold">
+                                        Mark Complete
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- Start Plan Section -->
+                    <template x-if="!readingPlanController.getProgress(activePlan?.id)">
+                        <div class="space-y-6">
+                            <div class="bg-black/20 rounded-xl p-6">
+                                <h3 class="text-lg font-semibold text-yellow-400 mb-4">First Day's Reading</h3>
+                                <div class="mb-4">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-blue-100">Day 1</span>
+                                        <span class="text-gray-400" x-text="`~${activePlan.days[1].estimated_duration} min`"></span>
+                                    </div>
+                                    <p class="text-white" x-text="activePlan.days[1].description"></p>
+                                </div>
+                                <div class="space-y-2">
+                                    <template x-for="passage in activePlan.days[1].passages" :key="passage">
+                                        <div class="bg-white/5 rounded-lg p-3">
+                                            <span class="text-blue-100" x-text="passage"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <button @click="
+                                readingPlanController.startPlan(activePlan.id);
+                                $nextTick(() => window.location.reload());"
+                                class="w-full py-4 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-colors font-semibold">
+                                Start This Plan
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+<!-- ...rest of existing code... -->
+    </main>
+
+    <!-- Standard Footer -->
+    <footer class="bg-gradient-to-r from-blue-800 to-purple-800 py-16 text-white mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-yellow-400">Faith First Ministries</h3>
+                    <p class="text-blue-100">Nurturing faith through scripture, song, and service since 2023.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-yellow-400">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="bible-study.html" class="text-blue-100 hover:text-yellow-400 transition-colors">Bible Study</a></li>
+                        <li><a href="hymns.html" class="text-blue-100 hover:text-yellow-400 transition-colors">Hymns</a></li>
+                        <li><a href="prayer-journal.html" class="text-blue-100 hover:text-yellow-400 transition-colors">Prayer Journal</a></li>
+                        <li><a href="community.html" class="text-blue-100 hover:text-yellow-400 transition-colors">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-blue-700/50 mt-8 pt-8 text-center">
+                <p class="text-blue-100">&copy; 2023 Faith First Ministries. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        function selectPlan(plan) {
+            this.selectedPlan = plan;
+            this.currentReading = this.readingPlanController.getNextReading(plan.id);
+        }
+
+        function getProgress(planId) {
+            const progress = this.readingPlanController.getProgress(planId);
+            return progress ? progress.percentComplete : 0;
+        }
+
+        function getDaysRemaining(planId) {
+            const progress = this.readingPlanController.getProgress(planId);
+            return progress ? progress.daysRemaining : 0;
+        }
+
+        function isCompleted(day) {
+            if (!this.selectedPlan) return false;
+            const progress = this.readingPlanController.getProgress(this.selectedPlan.id);
+            return progress ? progress.completedDays.includes(day) : false;
+        }
+
+        function markComplete(day) {
+            if (!this.selectedPlan) return;
+            this.readingPlanController.markDayComplete(this.selectedPlan.id, day);
+            this.currentReading = this.readingPlanController.getNextReading(this.selectedPlan.id);
+        }
+    </script>
+</body>
+</html>
